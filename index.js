@@ -3,6 +3,7 @@ const twStock = require('./src/function/twStock');
 const commandColorUtils = require('./src/utils/commandColorUtils');
 const checkPackageVerisonUtils = require('./src/utils/checkPackageVerisonUtils');
 const dateUtils = require('./src/utils/dateUtils');
+const vorpal = require("vorpal")();
 
 let argv = require('yargs/yargs')(process.argv.slice(2))
     .option('stock', {
@@ -55,3 +56,35 @@ if (!!argv.s || !!argv.stock) {
     // console.log(process.env.APPDATA);
     checkPackageVerisonUtils.checkVerison();
 }
+// https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_dat
+// https://aronhack.com/products/python-download-taiwan-stock-data-from-twse/
+
+vorpal.command("stock <type> <stockId>")
+    .action(function (args, callback) {
+        console.log("args:",args.type);
+        console.log("args:",args.stockId);
+        callback();
+
+        // if (!is_address(args.address)) {
+        //     console.log(chalk.red(`不合法的地址： ${args.address}`));
+        //     callback();
+        //     return;
+        // }
+        // if (!is_amount(args.amount)) {
+        //     console.log(chalk.red(`不合法的金額： ${args.amount}`));
+        //     callback();
+        //     return;
+        // }
+        // let json = JSON.stringify({
+        //     method: "sendtoaddress",
+        //     data: {
+        //         address: args.address,
+        //         amount: parseInt(args.amount)
+        //     }
+        // });
+        // sendAPI(json, callback, sendtoaddress_validator);
+    });
+
+vorpal
+    .delimiter("changchiakai-cli >")
+    .show();
