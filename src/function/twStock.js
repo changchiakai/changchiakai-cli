@@ -13,7 +13,7 @@ const boxen = require('boxen');
 
 let stockList = [];
 // 取當月每日收盤 及平均價格
-function getTwStockForStockNo(stockNo, queryYYYYMMDD) {
+function getTwStockForStockNo(stockNo, queryYYYYMMDD,callback) {
 
     // console.log(month.length )
     // console.log(month.length === 6 ? month+'01' : dateUtils.getTodayYYYYMMDD());
@@ -172,17 +172,18 @@ function getTwStockForStockNo(stockNo, queryYYYYMMDD) {
                     // })
 
                     //=> '▁▃▄▇▄▃▄█'
-
-                    return
+                    callback();
                 }
             }
+        }).finally(()=>{
+            callback();
         });
 }
 
 
 
 
-function getTwStockForRealTime(stockNo) {
+function getTwStockForRealTime(stockNo,callback) {
     // console.log(stockNo);
 
     axios.get(getFivePriceUrl(stockNo), {
@@ -245,6 +246,8 @@ function getTwStockForRealTime(stockNo) {
         } else {
             console.log("無法查詢請稍後再試");
         }
+    }).finally(()=>{
+        callback();
     })
 }
 
