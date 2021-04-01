@@ -1,10 +1,13 @@
 
-# changchiakai-cli
+# changchiakai-cli  
+
+
+```
+>changchiakai-cli  
+```
 
 一些指令可以查資料 
-
-
-## -s  stockId   (-m 20200101  )
+## -s  stockId 20200101 
 
 - 可以查股票近三十檔的股價 以table顯示於命令提示字元
 

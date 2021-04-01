@@ -4,13 +4,13 @@ const commandColorUtils = require("./src/utils/commandColorUtils");
 const checkPackageVerisonUtils = require("./src/utils/checkPackageVerisonUtils");
 const dateUtils = require("./src/utils/dateUtils");
 const vorpal = require("vorpal")();
-const lowDb = require("./src/function/settingEnv");
-lowDb.addData();
-lowDb.addData();
+// const lowDb = require("./src/function/settingEnv");
+// lowDb.addData();
+// lowDb.addData();
 
-for(let i = 0; i<50;i++){
-    lowDb.addData();
-}
+// for(let i = 0; i<50;i++){
+//     lowDb.addData();
+// }
 
 // 要做一個可以根據作業系統 放暫存資料檔案的功能
 
