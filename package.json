@@ -1,16 +1,17 @@
 {
   "name": "changchiakai-cli",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "changchiakai-cli",
   "main": "index.js",
+  "homepage": "https://github.com/changchiakai/changchiakai-cli",
   "scripts": {
     "start": "node ./index"
   },
   "bin": {
     "changchiakai-cli": "index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Chang Chia Kai <kevin811103@gmail.com> (https://github.com/changchiakai)",
+  "license": "LGPL",
   "dependencies": {
     "axios": "^0.21.0",
     "boxen": "^4.2.0",
