@@ -4,6 +4,7 @@ const commandColorUtils = require("./src/utils/commandColorUtils");
 const checkPackageVerisonUtils = require("./src/utils/checkPackageVerisonUtils");
 const dateUtils = require("./src/utils/dateUtils");
 const vorpal = require("vorpal")();
+const printComputerInfo = require("./src/utils/getCpu");
 // const lowDb = require("./src/function/settingEnv");
 // lowDb.addData();
 // lowDb.addData();
@@ -13,7 +14,6 @@ const vorpal = require("vorpal")();
 // }
 
 // 要做一個可以根據作業系統 放暫存資料檔案的功能
-
 
 // let argv = require('yargs/yargs')(process.argv.slice(2))
 //     .option('stock', {
@@ -67,29 +67,52 @@ const vorpal = require("vorpal")();
 // https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_dat
 // https://aronhack.com/products/python-download-taiwan-stock-data-from-twse/
 
-
 // vorpal 參考 https://github.com/MROS/infinite-chain-client
-vorpal.command("stock -r <stockId>").action(function (args, callback) {
-  console.log("args:", args.stockId);
-  const stockId = args.stockId;
-  twStock.getTwStockForRealTime(stockId, callback);
+vorpal
+  .command(
+    "stock -r <stockId>",
+    "get stock information with realtime five price"
+  )
+  .action(function (args, callback) {
+    console.log("args:", args.stockId);
+    const stockId = args.stockId;
+    twStock.getTwStockForRealTime(stockId, callback);
+  });
 
-});
-
-vorpal.command("stock -s <stockId> <yyyymm>").action(function (args, callback) {
+vorpal
+  .command("stock -s <stockId> <yyyymm>", " get stock info with monthly")
+  .action(function (args, callback) {
     console.log("args:", args.stockId);
     const stockId = args.stockId;
     const yyyymm = args.yyyymm;
-    let queryYYYYMMDD =  (yyyymm === 6 ? yyyymm+'01' : dateUtils.getTodayYYYYMMDD())
-    twStock.getTwStockForStockNo(stockId, queryYYYYMMDD,callback);
-
+    let queryYYYYMMDD =
+      yyyymm === 6 ? yyyymm + "01" : dateUtils.getTodayYYYYMMDD();
+    twStock.getTwStockForStockNo(stockId, queryYYYYMMDD, callback);
   });
 
-vorpal.command("version").action(function (args, callback) {
-    console.log("process.env:",process.env);
-    console.log("process.env:",process.platform);
-    
-    checkPackageVerisonUtils.checkVerison(callback);
+// 取得今(近) 日三大法人買賣資訊
+vorpal.command("stock -threeMajor").action(function (args, callback) {
+  twStock.getThreeMajorCorporationsBuySell(callback);
 });
 
+vorpal
+  .command("version", "check your process version is new")
+  .action(function (args, callback) {
+    console.log("process.env:", process.env);
+    console.log("process.env:", process.platform);
+
+    checkPackageVerisonUtils.checkVerison(callback);
+  });
+
+vorpal
+  .command(
+    "computerData",
+    "show your computer Infomation with os ,ram and cpu type"
+  )
+  .action(function (args, callback) {
+    // console.log("process.env:", process.env);
+    // console.log("process.env:", process.platform);
+
+    printComputerInfo.printComputerInfo(callback);
+  });
 vorpal.delimiter("changchiakai-cli >").show();
