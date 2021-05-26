@@ -18,12 +18,12 @@
 
 ## stock -threeMajor
 
-- 查詢三大法人當日購買量
+- 查詢三大法人買賣金額
 
 ## computerData
 
 - 取電腦資料
 
-## versio
+## version
 
 - 確認版本號碼
