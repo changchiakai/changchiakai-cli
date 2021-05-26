@@ -10,7 +10,7 @@ const stockUrl =
 var c = new Canvas(50, 100);
 const boxen = require("boxen");
 const dateFns = require("date-fns");
-// import { format } from "date-fns";
+const { zhTW } = require("date-fns/locale");
 
 let stockList = [];
 // 取當月每日收盤 及平均價格
@@ -291,8 +291,21 @@ https://www.twse.com.tw/fund/BFI82U?response=html&dayDate=20210519
 function getThreeMajorCorporationsBuySell(callback) {
   //www.twse.com.tw/fund/BFI82U?response=html&dayDate=20210521
 
-  const today = new Date(2021, 4, 21);
-  const todayFormat = dateFns.format(today, "yyyyMMdd");
+  // 如果今日超過３點再去打今天 如果沒打昨天
+  const today = new Date();
+  // const aa = new Date().toLocaleString("zh-TW", { timeZone: "Asia/Taipei" });
+  // console.log(aa);
+  // https://date-fns.org/v2.21.3/docs/format
+  // const todayFormat = dateFns.format(result, "yyyyMMdd kk:mm:ss", zhTW);
+  const isOver15 = dateFns.format(today, "kk", zhTW) >= 15 ? true : false;
+  console.log("isOver15:" + isOver15);
+  const result = dateFns.add(today, {
+    days: isOver15 ? 0 : -1,
+  });
+  // console.log("result:", result);
+
+  const todayFormat = dateFns.format(result, "yyyyMMdd", zhTW);
+  // console.log(todayFormat);
   try {
     axios
       .get(
@@ -302,22 +315,44 @@ function getThreeMajorCorporationsBuySell(callback) {
       .then(function (response) {
         if (response.data) {
           const stockData = response.data;
-          console.log(stockData);
+          // console.log(stockData);
           let $ = cheerio.load(response.data);
-          console.log("$:", $);
+          // console.log("$:", $);
           const dataTitle = $("table tr th div")[0].children[0].data.trim();
           const stockDataHtml = $("tbody tr td");
 
           console.log(dataTitle);
-          console.log(stockDataHtml);
+          // console.log(stockDataHtml);
 
-          console.log("-------");
+          // console.log("-------");
           // let stockdata = { date: "", price: "" };
           // let averagePrice = "";
+          const threeMajorDataList = [];
+          let threeMajorData = {};
           stockDataHtml.each(function (i, element) {
             const data = element.children;
-            console.log("thisis: data : ", data);
+            // console.log("thisis: data : ", data[0].data);
+
+            switch (i % 4) {
+              case 0:
+                threeMajorData = {};
+                threeMajorData.單位名稱 = data[0].data;
+
+                break;
+              case 1:
+                threeMajorData.買進金額 = data[0].data;
+                break;
+              case 2:
+                threeMajorData.賣出金額 = data[0].data;
+                break;
+              case 3:
+                threeMajorData.買賣差額 = data[0].data;
+                threeMajorDataList.push(threeMajorData);
+                break;
+            }
           });
+
+          console.table(threeMajorDataList);
           // console.log("stockData:", stockData);
         }
 
@@ -328,7 +363,7 @@ function getThreeMajorCorporationsBuySell(callback) {
     console.log("目前呼叫不到");
     allback();
   }
-  //=> '02/11/2014'
+  // => '02/11/2014'
   // if (date === "") {
   //   date = n;
   // }
