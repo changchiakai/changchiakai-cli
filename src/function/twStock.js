@@ -193,11 +193,13 @@ function getTwStockForStockNo(stockNo, queryYYYYMMDD, callback) {
     });
 }
 
-function getTwStockForRealTime(stockNo, callback) {
+async function getTwStockForRealTimeWithOtc(stockNo, isOtc) {}
+
+async function getTwStockForRealTime(stockNo, callback, isOtc) {
   // console.log(stockNo);
 
   axios
-    .get(getFivePriceUrl(stockNo), {
+    .get(getFivePriceUrl(stockNo, isOtc), {
       header: {
         // "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36",
         // "Cookie":"JSESSIONID=31D058A0598015805B738EC0F3A736FB; _ga=GA1.3.1950048803.1604293584; _gid=GA1.3.1521451193.1604293584; _gat_gtag_UA_138646291_1=1",
@@ -217,71 +219,161 @@ function getTwStockForRealTime(stockNo, callback) {
       // console.log(response.data || {})
       if (response.data) {
         const stockData = response.data.msgArray[0];
-        console.log("stockData:", stockData);
-        // v : 累積成量
-        // f : 賣出 數量  後面越高 '313_142_228_317_291_',
-        // g : 買入數量 前面越高 '11_234_239_77_302_',
-        // l :當日最低
-        // o: 開盤
-        // h:當日最高
-        // a: 賣五檔  '433.5000_434.0000_434.5000_435.0000_435.5000_',
-        // b: 買五檔  '433.0000_432.5000_432.0000_431.5000_431.0000_',
-        // pz: 開盤
-        // n: '台積電',
-        // y: 昨收
-        if (stockData) {
-          console.log(
-            commandColorUtils.fgMagenta(`股名:${stockData.n}(${stockNo})`)
-          );
-          console.log(commandColorUtils.warn(`開盤: ${stockData.pz} 元`));
-          console.log(commandColorUtils.red(`當日最高: ${stockData.h} 元`));
-          console.log(commandColorUtils.green(`當日最低: ${stockData.l} 元`));
-          const buyPriceList = stockData.b.split("_");
-          const salePriceList = stockData.a.split("_");
-          const buyQList = stockData.f.split("_");
-          const saleQList = stockData.g.split("_");
-          for (let toFive = 0; toFive < 5; toFive++) {
-            console.log(
-              boxen(
-                commandColorUtils.green(buyQList[toFive]) +
-                  commandColorUtils.white("|") +
-                  commandColorUtils.green(buyPriceList[toFive]) +
-                  commandColorUtils.white("||") +
-                  commandColorUtils.red(salePriceList[toFive]) +
-                  commandColorUtils.white("|") +
-                  commandColorUtils.red(saleQList[toFive])
-              )
-            );
-          }
-          // const c = stockData.b.split("_");
-          // c.forEach((d) => {
-          //     console.log(boxen(d));
-          // })
-          // console.log(numberUtils.roundToTwo((Number(stockData.b.split("_")[0])/30.25-1)*100)+"%");
-          // console.log(numberUtils.roundToTwo((Number(stockData.a.split("_")[0])/30.25-1)*100)+"%");
-          console.log("現價(買五檔第一位):", stockData.b.split("_")[0]);
-          console.log("現價(賣五檔第一位):", stockData.a.split("_")[0]);
-          console.log("成量:", numberUtils.toThousands(stockData.v));
+        if (stockData == undefined) {
+          // 可能是otc
+          axios
+            .get(getFivePriceUrl(stockNo, true), {
+              header: {
+                // "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36",
+                // "Cookie":"JSESSIONID=31D058A0598015805B738EC0F3A736FB; _ga=GA1.3.1950048803.1604293584; _gid=GA1.3.1521451193.1604293584; _gat_gtag_UA_138646291_1=1",
+                // "X-Requested-With":"XMLHttpRequest",
+                // "Sec-Fetch-Site": "same-origin",
+                // "Sec-Fetch-Mode": "cors",
+                // "Sec-Fetch-Dest": "empty",
+                // "Referer": "https://mis.twse.com.tw/stock/fibest.jsp?stock=2330",
+                // "Host": "mis.twse.com.tw",
+                // "Accept": "application/json, text/javascript, */*; q=0.01",
+                // "Accept-Encoding": "gzip, deflate, br",
+                // "Accept-Language": "zh-TW,zh;q=0.9",
+                // "Connection":"keep-alive"
+              },
+            })
+            .then(function (response) {
+              // console.log(response.data || {})
+              if (response.data) {
+                const stockData = response.data.msgArray[0];
+                // console.log("stockData:", stockData);
+                // v : 累積成量
+                // f : 賣出 數量  後面越高 '313_142_228_317_291_',
+                // g : 買入數量 前面越高 '11_234_239_77_302_',
+                // l :當日最低
+                // o: 開盤
+                // h:當日最高
+                // a: 賣五檔  '433.5000_434.0000_434.5000_435.0000_435.5000_',
+                // b: 買五檔  '433.0000_432.5000_432.0000_431.5000_431.0000_',
+                // pz: 開盤
+                // n: '台積電',
+                // y: 昨收
+                if (stockData) {
+                  console.log(
+                    commandColorUtils.fgMagenta(
+                      `股名:${stockData.n}(${stockNo})`
+                    )
+                  );
+                  console.log(
+                    commandColorUtils.warn(`開盤: ${stockData.pz} 元`)
+                  );
+                  console.log(
+                    commandColorUtils.red(`當日最高: ${stockData.h} 元`)
+                  );
+                  console.log(
+                    commandColorUtils.green(`當日最低: ${stockData.l} 元`)
+                  );
+                  const buyPriceList = stockData.b.split("_");
+                  const salePriceList = stockData.a.split("_");
+                  const buyQList = stockData.f.split("_");
+                  const saleQList = stockData.g.split("_");
+                  for (let toFive = 0; toFive < 5; toFive++) {
+                    console.log(
+                      boxen(
+                        commandColorUtils.green(buyQList[toFive]) +
+                          commandColorUtils.white("|") +
+                          commandColorUtils.green(buyPriceList[toFive]) +
+                          commandColorUtils.white("||") +
+                          commandColorUtils.red(salePriceList[toFive]) +
+                          commandColorUtils.white("|") +
+                          commandColorUtils.red(saleQList[toFive])
+                      )
+                    );
+                  }
+
+                  console.log("現價(買五檔第一位):", stockData.b.split("_")[0]);
+                  console.log("現價(賣五檔第一位):", stockData.a.split("_")[0]);
+                  console.log("成量:", numberUtils.toThousands(stockData.v));
+                  callback();
+                } else {
+                  console.log("查無資料");
+                  callback();
+                }
+              } else {
+                console.log("無法查詢請稍後再試");
+                callback();
+              }
+            });
+          // getTwStockForRealTime(stockNo, callback, true);
         } else {
-          console.log("查無資料");
+          // console.log("stockData:", stockData);
+          // v : 累積成量
+          // f : 賣出 數量  後面越高 '313_142_228_317_291_',
+          // g : 買入數量 前面越高 '11_234_239_77_302_',
+          // l :當日最低
+          // o: 開盤
+          // h:當日最高
+          // a: 賣五檔  '433.5000_434.0000_434.5000_435.0000_435.5000_',
+          // b: 買五檔  '433.0000_432.5000_432.0000_431.5000_431.0000_',
+          // pz: 開盤
+          // n: '台積電',
+          // y: 昨收
+          if (stockData) {
+            console.log(
+              commandColorUtils.fgMagenta(`股名:${stockData.n}(${stockNo})`)
+            );
+            console.log(commandColorUtils.warn(`開盤: ${stockData.pz} 元`));
+            console.log(commandColorUtils.red(`當日最高: ${stockData.h} 元`));
+            console.log(commandColorUtils.green(`當日最低: ${stockData.l} 元`));
+            const buyPriceList = stockData.b.split("_");
+            const salePriceList = stockData.a.split("_");
+            const buyQList = stockData.f.split("_");
+            const saleQList = stockData.g.split("_");
+            for (let toFive = 0; toFive < 5; toFive++) {
+              console.log(
+                boxen(
+                  commandColorUtils.green(buyQList[toFive]) +
+                    commandColorUtils.white("|") +
+                    commandColorUtils.green(buyPriceList[toFive]) +
+                    commandColorUtils.white("||") +
+                    commandColorUtils.red(salePriceList[toFive]) +
+                    commandColorUtils.white("|") +
+                    commandColorUtils.red(saleQList[toFive])
+                )
+              );
+            }
+            // const c = stockData.b.split("_");
+            // c.forEach((d) => {
+            //     console.log(boxen(d));
+            // })
+            // console.log(numberUtils.roundToTwo((Number(stockData.b.split("_")[0])/30.25-1)*100)+"%");
+            // console.log(numberUtils.roundToTwo((Number(stockData.a.split("_")[0])/30.25-1)*100)+"%");
+            console.log("現價(買五檔第一位):", stockData.b.split("_")[0]);
+            console.log("現價(賣五檔第一位):", stockData.a.split("_")[0]);
+            console.log("成量:", numberUtils.toThousands(stockData.v));
+            callback();
+          } else {
+            console.log("查無資料");
+            callback();
+          }
         }
       } else {
         console.log("無法查詢請稍後再試");
+        callback();
       }
-    })
-    .finally(() => {
-      callback();
     });
 }
 
-function getFivePriceUrl(stockNo) {
+// tse 集中市場
+// otc 上櫃市場
+// https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_3105.tw&json=1&delay=0&_=1622432923818
+
+function getFivePriceUrl(stockNo, isOtc) {
   const nowTime = new Date();
   const url =
-    "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_" +
+    "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=" +
+    (isOtc ? "otc" : "tse") +
+    "_" +
     stockNo +
     ".tw&json=1&delay=0&_=" +
     nowTime.getTime();
-  // console.log("url:" ,url);
+  // console.log("url:", url);
   return url;
 }
 
