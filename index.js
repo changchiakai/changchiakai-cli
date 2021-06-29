@@ -5,6 +5,7 @@ const checkPackageVerisonUtils = require("./src/utils/checkPackageVerisonUtils")
 const dateUtils = require("./src/utils/dateUtils");
 const vorpal = require("vorpal")();
 const printComputerInfo = require("./src/utils/getCpu");
+const queryPchome = require("./src/function/queryPchome");
 // const lowDb = require("./src/function/settingEnv");
 // lowDb.addData();
 // lowDb.addData();
@@ -93,6 +94,10 @@ vorpal
 // 取得今(近) 日三大法人買賣資訊
 vorpal.command("stock -threeMajor").action(function (args, callback) {
   twStock.getThreeMajorCorporationsBuySell(callback);
+});
+
+vorpal.command("ps5").action(function (args, callback) {
+  queryPchome.getProDetail(callback);
 });
 
 vorpal
