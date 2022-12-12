@@ -1,5 +1,33 @@
 const os = require("os");
+const si = require('systeminformation');
 
+function cpuTemperature(callback) {
+  si.cpuTemperature().then(data => {
+    console.log("cpuTemperature: ", data);
+    callback();
+
+  }).catch(error => {
+    console.log("error: ", error);
+    callback();
+
+  })
+
+}
+function tes(callback) {
+  // promises style - new since version 3
+  si.cpu()
+    .then(data => {
+      console.log(data);
+      callback();
+    })
+    .catch(error =>{
+      console.error(error);
+      callback();
+    });
+
+
+
+}
 function printComputerInfo(callback) {
   // console.log(os.cpus());
   // console.log(os.totalmem());
@@ -51,4 +79,6 @@ function printComputerInfo(callback) {
 
 module.exports = {
   printComputerInfo,
+  tes,
+  cpuTemperature
 };

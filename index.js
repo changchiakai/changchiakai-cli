@@ -120,4 +120,40 @@ vorpal
 
     printComputerInfo.printComputerInfo(callback);
   });
+
+vorpal
+.command(
+  "computerData",
+  "show your computer Infomation with os ,ram and cpu type"
+)
+.action(function (args, callback) {
+  // console.log("process.env:", process.env);
+  // console.log("process.env:", process.platform);
+
+  printComputerInfo.printComputerInfo(callback);
+});
+vorpal
+.command(
+  "cpu",
+  "cpu"
+)
+.action(function (args, callback) {
+  // console.log("process.env:", process.env);
+  // console.log("process.env:", process.platform);
+
+  printComputerInfo.tes(callback);
+});
+vorpal
+.command(
+  "ct",
+  "cpuTemperature"
+)
+.action(function (args, callback) {
+  // console.log("process.env:", process.env);
+  // console.log("process.env:", process.platform);
+
+  printComputerInfo.cpuTemperature(callback);
+});
+
+
 vorpal.delimiter("changchiakai-cli >").show();
