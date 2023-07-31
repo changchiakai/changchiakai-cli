@@ -36,3 +36,10 @@
 
 - 股票功能 因為有些 api 是去呼叫證交所
   [5 秒內不能存取超過 3 次 超過會鎖 IP 鎖的時間不一定 至少 20 分鐘起跳](https://www.ptt.cc/bbs/Stock/M.1513840325.A.AE7.html)
+
+
+## 開發備註
+
+開發期間要將 已安裝的 移除掉  uninstall -g XXX
+
+npm link  來連結
