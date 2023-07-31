@@ -43,3 +43,5 @@
 開發期間要將 已安裝的 移除掉  uninstall -g XXX
 
 npm link  來連結
+
+npm unlink 來移除連結

@@ -75,9 +75,8 @@ vorpal
     "get stock information with realtime five price"
   )
   .action(function (args, callback) {
-    console.log("args:", args.stockId);
-    const stockId = args.stockId;
-    twStock.getTwStockForRealTime(stockId, callback);
+    const stockId = String(args.stockId);
+    twStock.getTwStockForRealTime(stockId.length === 3 ? '00' + stockId : stockId, callback);
   });
 
 vorpal
@@ -126,38 +125,38 @@ vorpal
   });
 
 vorpal
-.command(
-  "computerData",
-  "show your computer Infomation with os ,ram and cpu type"
-)
-.action(function (args, callback) {
-  // console.log("process.env:", process.env);
-  // console.log("process.env:", process.platform);
+  .command(
+    "computerData",
+    "show your computer Infomation with os ,ram and cpu type"
+  )
+  .action(function (args, callback) {
+    // console.log("process.env:", process.env);
+    // console.log("process.env:", process.platform);
 
-  printComputerInfo.printComputerInfo(callback);
-});
+    printComputerInfo.printComputerInfo(callback);
+  });
 vorpal
-.command(
-  "cpu",
-  "cpu"
-)
-.action(function (args, callback) {
-  // console.log("process.env:", process.env);
-  // console.log("process.env:", process.platform);
+  .command(
+    "cpu",
+    "cpu"
+  )
+  .action(function (args, callback) {
+    // console.log("process.env:", process.env);
+    // console.log("process.env:", process.platform);
 
-  printComputerInfo.tes(callback);
-});
+    printComputerInfo.tes(callback);
+  });
 vorpal
-.command(
-  "ct",
-  "cpuTemperature"
-)
-.action(function (args, callback) {
-  // console.log("process.env:", process.env);
-  // console.log("process.env:", process.platform);
+  .command(
+    "ct",
+    "cpuTemperature"
+  )
+  .action(function (args, callback) {
+    // console.log("process.env:", process.env);
+    // console.log("process.env:", process.platform);
 
-  printComputerInfo.cpuTemperature(callback);
-});
+    printComputerInfo.cpuTemperature(callback);
+  });
 
 
 vorpal.delimiter("changchiakai-cli >").show();

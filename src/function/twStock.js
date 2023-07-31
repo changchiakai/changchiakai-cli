@@ -196,7 +196,7 @@ function getTwStockForStockNo(stockNo, queryYYYYMMDD, callback) {
 async function getTwStockForRealTimeWithOtc(stockNo, isOtc) {}
 
 async function getTwStockForRealTime(stockNo, callback, isOtc) {
-  // console.log(stockNo);
+  console.log(`查詢的股票代號為:${stockNo}`);
 
   axios
     .get(getFivePriceUrl(stockNo, isOtc), {
