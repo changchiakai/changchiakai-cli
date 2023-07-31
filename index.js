@@ -97,7 +97,11 @@ vorpal.command("stock -threeMajor").action(function (args, callback) {
 });
 
 vorpal.command("ps5").action(function (args, callback) {
-  queryPchome.getProDetail(callback);
+  queryPchome.getProDetail(null, callback);
+});
+
+vorpal.command("pchome <prodId>").action(function (args, callback) {
+  queryPchome.getProDetail(args.prodId, callback);
 });
 
 vorpal

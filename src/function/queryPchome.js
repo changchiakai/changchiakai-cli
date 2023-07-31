@@ -2,8 +2,10 @@
 
 const axios = require("axios");
 
-function getProDetail(callback) {
-  const prodId = "DGBJG9-A900B51SM";
+function getProDetail(prodId, callback) {
+  if (!!!prodId) {
+    prodId = "DGBJG9-A900B51SM";
+  }
 
   const url = genPchomeQueryProdUrl(prodId);
 
@@ -20,7 +22,7 @@ function getProDetail(callback) {
       //   console.log(`prodDetailJson:`, prodDetailJson);
       //   console.log(prodDetailJson.Discount);
       console.log(
-        `${prodDetailJson.Name} 目前數量為 ${prodDetailJson.Discount} , 官網狀態為 ${prodDetailJson.Nick}`
+        `${prodDetailJson.Name} 目前數量為 ${prodDetailJson.Qty} , 官網狀態為 ${prodDetailJson.Nick}`
       );
       callback();
     }
